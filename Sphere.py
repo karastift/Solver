@@ -5,21 +5,26 @@ class Sphere:
     radius = float()
     Ao = float()
     volume = float()
-
+    error = False
+    
     def getValues(self):
+        if self.error != True:
+            if self.radius:
+                self.radToAoV()
+            elif self.Ao:
+                self.AoToRV()
+            else:
+                self.vToRAo()
 
-        if self.radius:
-            self.radToAoV()
-        elif self.Ao:
-            self.AoToRV()
-        else:
-            self.vToRAo()
-
-        finalValues = {
+            finalValues = {
             'r': self.radius,
             'Ao': self.Ao,
             'V': self.volume
-        }
+            }
+        else:
+            finalValues = {
+                'ERROR': 0
+            }
         
         self.resetValues()
         return finalValues
@@ -53,3 +58,4 @@ class Sphere:
         self.radius = float()
         self.Ao = float()
         self.volume = float()
+        self.error = False

@@ -1,0 +1,2 @@
+# Solver
+Solves math problems.

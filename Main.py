@@ -27,24 +27,14 @@ tasks = {
         'V': 36
     }
 }
-OKBLUE = '\033[94m'
-FAIL = '\033[91m'
-OKCYAN = '\033[96m'
-ENDC = '\033[0m'
+
 def main():
     S = Solver()
-    # pprint.pprint(S.calculateSphere(tasks))
-    solution = S.calculateSphere(tasks)
-    space = ' ' * 4
-    for key in list(solution.keys()):
-        vals = solution[key]
-        print(f'{OKBLUE}{key}){ENDC}')
-        for key2 in list(vals.keys()):
-            print(f'{space}{OKCYAN}{key2}:{ENDC} {vals[key2]}')
-    
     
     # print(S.convertImage('example.png'))
+    convertedString = S.convertString('a) r=39cm c) V=980cm3 e) A0=5oooodm2 g) AO=35m2 b) AO=26OCm2 d) Ao=1985,96m2 f) r=O,71m h) V=36m3')
+    solution = S.calculateSphere(tasks)
+    S.printSolution(solution)
 
 if __name__ == '__main__':
     main()
-    input()

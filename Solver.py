@@ -1,47 +1,39 @@
 import pytesseract
 from PIL import Image
-from Sphere import Sphere
-
-exampleTasks = {
-    'a': {
-        'r': 3
-    },
-    'b': {
-        'Ao': 50
-    }
-}
+from Sphere import Sphere#
+import re
 
 class Solver:
 
     def convertImage(self, path: str):
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\tesseract.exe'
-        string = pytesseract.image_to_string(Image.open(path))
-        string = "".join(string.split())
-        print(string)
-        finalDict = dict()
-
-        alphabet = 'qwertyuiopasdfghjklzxcvbnm'
-        curr = 0
-        for char in string:
-            print(char)
-            if char in alphabet:
-                valueType = string[string.index(char)+2]
-                value = str()
-                for nextChar in string[string.index(valueType)+2:]:
+        imageText = pytesseract.image_to_string(Image.open(path))
+        return imageText
                     
-                    print("nextchar", nextChar)
-                    try:
-                        int(nextChar)
-                        value += nextChar
-                    except:
-                        value = float(value)
-                        break
-                finalDict[char] = {
-                    valueType: value
-                }
-        return finalDict
-                    
+    def convertString(self, text: str) -> dict:
+        result = dict()
+        string = text
+        string = string.split(sep=' ')
+        alphabet = 'qwertzuiopasdfghjklöäüyxcvbnm'
+        for i in range(0, len(string), 2):
+            result[string[i]] = dict()
+            curr = result[string[i]]
+            sweet = string[i+1]
+            valueType = re.sub('0', 'o', re.sub('[=]', '', sweet[:2]).lower())
+            value = re.sub('[,]', '.', re.sub('[oO]', '0', sweet[sweet.index('=')+1:])).lower()
+            if value[-3] in alphabet:
+                value = value[:len(value) - 3]
+            elif value[-2] in alphabet:
+                value = value[:len(value) - 2]
+            elif value[-1] in alphabet:
+                value = value[:len(value) - 1]
+            else: pass
+            
+            result[string[i]] = {
+                valueType: value
+            }
 
+        return result
 
     def calculateSphere(self, problems: dict) -> dict:
         
@@ -65,3 +57,14 @@ class Solver:
             solutionDict[key] = S.getValues()
       
         return solutionDict
+
+    def printSolution(self, solution: dict):
+        OKBLUE = '\033[94m'
+        OKCYAN = '\033[96m'
+        ENDC = '\033[0m'
+        space = ' ' * 4
+        for key in list(solution.keys()):
+            vals = solution[key]
+            print(f'{OKBLUE}{key}){ENDC}')
+            for key2 in list(vals.keys()):
+                print(f'{space}{OKCYAN}{key2}:{ENDC} {vals[key2]}')

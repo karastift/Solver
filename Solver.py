@@ -6,31 +6,34 @@ import re
 class Solver:
 
     def convertImage(self, path: str):
-        pytesseract.pytesseract.tesseract_cmd = r'Tesseract-OCR\tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
         imageText = pytesseract.image_to_string(Image.open(path))
         return imageText
                     
     def convertString(self, text: str) -> dict:
         result = dict()
-        string = text
+        string = text.replace('\n', ' ')
         string = string.split(sep=' ')
         alphabet = 'qwertzuiopasdfghjklöäüyxcvbnm'
         for i in range(0, len(string), 2):
             result[string[i]] = dict()
-            curr = result[string[i]]
             sweet = string[i+1]
-            valueType = re.sub('0', 'o', re.sub('[=]', '', sweet[:2]).lower())
-            value = re.sub('[,]', '.', re.sub('[oO]', '0', sweet[sweet.index('=')+1:])).lower()
-            if value[-3] in alphabet:
-                value = value[:len(value) - 3]
-            elif value[-2] in alphabet:
-                value = value[:len(value) - 2]
-            elif value[-1] in alphabet:
-                value = value[:len(value) - 1]
-            else: pass
+            try:
+                valueType = re.sub('0', 'o', re.sub('[=]', '', sweet[:2]).lower())
+                value = re.sub('[,]', '.', re.sub('[oO]', '0', sweet[sweet.index('=')+1:])).lower()
+                if value[-3] in alphabet:
+                    value = value[:len(value) - 3]
+                elif value[-2] in alphabet:
+                    value = value[:len(value) - 2]
+                elif value[-1] in alphabet:
+                    value = value[:len(value) - 1]
+                else: pass
+            except:
+                valueType = 'ERROR'
+                value = 0
             
             result[string[i]] = {
-                valueType: value
+                valueType: float(value)
             }
 
         return result
@@ -50,6 +53,9 @@ class Solver:
 
             elif valueType == 'Ao':
                 S.Ao = value
+            
+            elif valueType == 'ERROR':
+                S.error = True
 
             else:
                 S.volume = value
@@ -65,6 +71,6 @@ class Solver:
         space = ' ' * 4
         for key in list(solution.keys()):
             vals = solution[key]
-            print(f'{OKBLUE}{key}){ENDC}')
+            print(f'{OKBLUE}{key}{ENDC}')
             for key2 in list(vals.keys()):
                 print(f'{space}{OKCYAN}{key2}:{ENDC} {vals[key2]}')

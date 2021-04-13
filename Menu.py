@@ -15,9 +15,10 @@ class Menu:
     UNDERLINE = '\033[4m'
     WAITTIME = 3
     # first menu vars
+    ABOVEFIRSTMENUTEXT = f'{BOLD}General options:{ENDC}\n'
     FIRSTMENUTEXT = f'{BOLD}0.{ENDC} Exit.\n\n{BOLD}1.{ENDC} Calculate sphere values.\n\n{BOLD}2.{ENDC} Coming soon.\n\n'
     INVALIDOPTIONTEXT = f'{FAIL}The chosen option is invalid. Please just type integers: {BOLD}\'<option>\'{ENDC}'
-    GOODBYETEXTERROR = f'\n\n{BOLD}Goodbye.{ENDC}\nPlease open an {BOLD}issue{ENDC} on {BOLD}Github{ENDC} if you have any problem with the software.{ENDC}\n\n{UNDERLINE}https://github.com/karastift/Solver.git'
+    GOODBYETEXTERROR = f'\n\n{BOLD}Goodbye.{ENDC}\nPlease open an {BOLD}issue{ENDC} on {BOLD}Github{ENDC} if you have any problem with the software.{ENDC}\n\n{UNDERLINE}https://github.com/karastift/Solver.git\n'
     GOODBYETEXT = f'{BOLD}Goodbye.{ENDC}'
     exited = False
     # sphere menu vars
@@ -40,6 +41,7 @@ class Menu:
     def firstMenu(self):
         try:
             self.screenClear()
+            print(self.ABOVEFIRSTMENUTEXT)
             print(self.FIRSTMENUTEXT)
             option = input('What do you want to do?\n: ')
             if option == '0':

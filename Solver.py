@@ -1,13 +1,18 @@
 import pytesseract
 from PIL import Image
-from Sphere import Sphere#
-import re
+from Sphere import Sphere
+from re import sub
+from os import name
 
 class Solver:
 
     def convertImage(self, path: str):
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
+        if name == 'posix':
+            pytesseract.pytesseract.tesseract_cmd = '/opt/homebrew/bin/tesseract'
+        else:
+            pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
         imageText = pytesseract.image_to_string(Image.open(path))
+
         return imageText
                     
     def convertString(self, text: str) -> dict:
@@ -19,8 +24,8 @@ class Solver:
             result[string[i]] = dict()
             sweet = string[i+1]
             try:
-                valueType = re.sub('0', 'o', re.sub('[=]', '', sweet[:2]).lower())
-                value = re.sub('[,]', '.', re.sub('[oO]', '0', sweet[sweet.index('=')+1:])).lower()
+                valueType = sub('0', 'o', sub('[=]', '', sweet[:2]).lower())
+                value = sub('[,]', '.', sub('[oO]', '0', sweet[sweet.index('=')+1:])).lower()
                 if value[-3] in alphabet:
                     value = value[:len(value) - 3]
                 elif value[-2] in alphabet:

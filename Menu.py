@@ -1,6 +1,10 @@
 import os
 import time
 import imghdr
+from Solver import Solver
+import itertools
+import threading
+import sys
 
 class Menu:
     # general vars
@@ -13,7 +17,7 @@ class Menu:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-    WAITTIME = 3
+    WAITTIME = 2
     # first menu vars
     ABOVEFIRSTMENUTEXT = f'{BOLD}General options:{ENDC}\n'
     FIRSTMENUTEXT = f'{BOLD}0.{ENDC} Exit.\n\n{BOLD}1.{ENDC} Calculate sphere values.\n\n{BOLD}2.{ENDC} Coming soon.\n\n'
@@ -22,6 +26,7 @@ class Menu:
     GOODBYETEXT = f'{BOLD}Goodbye.{ENDC}'
     exited = False
     # sphere menu vars
+    done = False
     imagePath = str()
     noneText = imagePath if imagePath else f'{WARNING}None{ENDC}'
     imageText = f'{OKGREEN}selected image{ENDC}' if imagePath else f'{WARNING}image required{ENDC}'
@@ -79,6 +84,18 @@ class Menu:
                     print(f'{self.FAIL}\'{path}\' does not lead to a valid image.{self.ENDC}')
                     time.sleep(self.WAITTIME)
                 self.sphereMenu()
+            elif option == '2':
+                S = Solver()
+                convertedImage = S.convertImage(self.imagePath)
+                convertedString = S.convertString(convertedImage)
+                solution = S.calculateSphere(convertedString)
+                self.screenClear()
+                S.printSolution(solution)
+                t = threading.Thread(target=self.animate)
+                t.start()
+                input()
+                self.done = True
+                self.sphereMenu()
             else:
                 print(self.INVALIDOPTIONTEXT)
                 time.sleep(self.WAITTIME)
@@ -101,4 +118,11 @@ class Menu:
             os.system('clear')
         else:
             os.system('cls')
-M = Menu()
+
+    def animate(self):
+        for c in itertools.cycle(['|', '/', '-', '\\']):
+            if self.done:
+                break
+            sys.stdout.write('\rPress ENTER To Continue ' + c)
+            sys.stdout.flush()
+            time.sleep(0.1)

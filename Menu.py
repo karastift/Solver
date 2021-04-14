@@ -86,7 +86,7 @@ class Menu:
                 self.sphereMenu()
             elif option == '2':
                 S = Solver()
-                convertedImage = S.convertImage(self.imagePath)
+                convertedImage = S.convertImage(self.imagePath, 1)
                 convertedString = S.convertString(convertedImage)
                 solution = S.calculateSphere(convertedString)
                 self.screenClear()

@@ -3,15 +3,21 @@ from PIL import Image
 from Sphere import Sphere
 from re import sub
 from os import name
+from cv2 import imread
 
 class Solver:
 
-    def convertImage(self, path: str):
+    def convertImage(self, path: str, option: int):
         if name == 'posix':
             pytesseract.pytesseract.tesseract_cmd = '/opt/homebrew/bin/tesseract'
         else:
             pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
-        imageText = pytesseract.image_to_string(Image.open(path))
+        if option == 1:
+            imageText = pytesseract.image_to_string(Image.open(path))
+        elif option == 2:
+            imageText = pytesseract.image_to_string(imread(path, 0))
+        else:
+            imageText = pytesseract.image_to_string(Image.open(path))
 
         return imageText
                     
